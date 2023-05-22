@@ -26,20 +26,6 @@ public class UseRenderingPlugin : MonoBehaviour
 
 	IntPtr renderEventData;
 
-    Dictionary<Camera, CommandBuffer> cameraCommandBuffers = new Dictionary<Camera, CommandBuffer>();
-
-	void RenderCallback(Camera cam)
-	{
-		if (!cameraCommandBuffers.ContainsKey(cam))
-		{
-			CommandBuffer commandBuffer = new CommandBuffer { name = "UseRenderingPlugin" };
-            commandBuffer.Clear();
-            commandBuffer.IssuePluginEventAndData(GetRenderEventWithDataFunc(), 0, renderEventData);
-			cam.AddCommandBuffer(CameraEvent.BeforeForwardAlpha, commandBuffer);
-            cameraCommandBuffers.Add(cam, commandBuffer);
-		}
-	}
-
     private void Start()
     {
         dstBuffer = new ComputeBuffer(128, sizeof(int));
@@ -50,6 +36,8 @@ public class UseRenderingPlugin : MonoBehaviour
         data.size = 128 * sizeof(int);
         renderEventData = Marshal.AllocHGlobal(Marshal.SizeOf(data));
         Marshal.StructureToPtr(data, renderEventData, true);
-        Camera.onPreRender += RenderCallback;
+        CommandBuffer commandBuffer = new CommandBuffer { name = "UseRenderingPlugin" };
+        commandBuffer.IssuePluginEventAndData(GetRenderEventWithDataFunc(), 0, renderEventData);
+        Graphics.ExecuteCommandBuffer(commandBuffer);
     }
 }
