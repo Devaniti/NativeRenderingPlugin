@@ -11,10 +11,11 @@ WSATestCertificate.pfx*
 
 UnityProject/*.csproj
 UnityProject/*.sln
-UnityProject/Library
-UnityProject/Temp
-UnityProject/UWP
-UnityProject/Logs
+UnityProject/Library/
+UnityProject/Temp/
+UnityProject/Logs/
+UnityProject/obj/
+UnityProject/UserSettings/
 
 PluginSource/build
 PluginSource/projects/Android/libs/*
